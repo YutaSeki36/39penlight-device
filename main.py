@@ -35,9 +35,8 @@ def on_connect(client, userdata, flags, respons_code):
 
 def on_message(client, userdata, msg):
     print(msg.payload.decode('utf-8'))
-    try:
-        rgb = hex_to_rgb(msg.payload.decode('utf-8'))
-        stripe(rgb[0], rgb[1], rgb[2])
+    rgb = hex_to_rgb(msg.payload.decode('utf-8'))
+    stripe(rgb[0], rgb[1], rgb[2])
 
 def main():
     try:
