@@ -9,12 +9,17 @@ def stripe(red=0,green=0,blue=0):
         pixels[x] = (red, green, blue)
         time.sleep(1)
 
+def lightUp(red=0,green=0,blue=0):
+    pixels.fill((red, green, blue))
+
 def cleanup():
     pixels.fill((0, 0, 0))
 
 def main():
     try:
         stripe(0, 255, 0)
+        while True:
+            lightUp(0, 255, 0)
 
     finally:
         cleanup()
