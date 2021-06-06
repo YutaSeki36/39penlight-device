@@ -29,7 +29,7 @@ def on_connect(client, userdata, flags, respons_code):
     client.subscribe(TOPIC)
 
 def on_message(client, userdata, msg):
-    print(str(msg.payload))
+    print(msg.payload.decode('utf-8'))
 
 def main():
     client = mqtt.Client()
