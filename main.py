@@ -7,7 +7,7 @@ import paho.mqtt.client as mqtt
 
 HOSTNAME = "mqtt.beebotte.com"
 PORT = 1883
-TOKEN = os.environ.get('TOKEN')
+TOKEN = os.environ['TOKEN']
 TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 14
