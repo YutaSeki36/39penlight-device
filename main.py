@@ -3,6 +3,7 @@ import neopixel
 import time
 import os
 import subprocess
+import paho.mqtt.client as mqtt
 
 HOSTNAME = "mqtt.beebotte.com"
 PORT = 1883
@@ -40,7 +41,7 @@ def main():
     client.on_message = on_message
     client.connect(HOSTNAME, port=PORT, keepalive=60)
     client.loop_forever()
-    
+
     try:
         stripe(0, 255, 0)
         while True:
