@@ -29,12 +29,7 @@ def on_connect(client, userdata, flags, respons_code):
     client.subscribe(TOPIC)
 
 def on_message(client, userdata, msg):
-    print(msg.payload)
-    data = json.loads(msg.payload.decode("utf-8"))["data"]
-    try:
-        execIrrp(data)
-    except ValueError as e:
-        print(e)
+    print(str(msg.payload))
 
 def main():
     client = mqtt.Client()
