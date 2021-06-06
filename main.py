@@ -1,6 +1,13 @@
 import board
 import neopixel
 import time
+import os
+import subprocess
+
+HOSTNAME = "mqtt.beebotte.com"
+PORT = 1883
+TOKEN = os.environ.get('TOKEN')
+TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 14
 
@@ -15,7 +22,25 @@ def lightUp(red=0,green=0,blue=0):
 def cleanup():
     pixels.fill((0, 0, 0))
 
+def on_connect(client, userdata, flags, respons_code):
+    print('status {}'.format(respons_code))
+    client.subscribe(TOPIC)
+
+def on_message(client, userdata, msg):
+    data = json.loads(msg.payload.decode("utf-8"))["data"]
+    try:
+        execIrrp(data)
+    except ValueError as e:
+        print(e)
+
 def main():
+    client = mqtt.Client()
+    client.username_pw_set("token:%s"%TOKEN)
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect(HOSTNAME, port=PORT, keepalive=60)
+    client.loop_forever()
+    
     try:
         stripe(0, 255, 0)
         while True:
