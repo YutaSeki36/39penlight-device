@@ -11,7 +11,7 @@ PORT = 1883
 TOKEN = config.TOKEN
 TOPIC = "penlight/color"
 
-MAX_LED_LENGTH = 14
+MAX_LED_LENGTH = 15
 
 def stripe(red=0,green=0,blue=0):
     for x in range(0, MAX_LED_LENGTH):
@@ -46,9 +46,6 @@ def main():
         client.on_message = on_message
         client.connect(HOSTNAME, port=PORT, keepalive=60)
         client.loop_forever()
-        # stripe(0, 255, 0)
-        # while True:
-        #     lightUp(0, 255, 0)
 
     finally:
         cleanup()
