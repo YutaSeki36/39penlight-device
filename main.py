@@ -16,7 +16,7 @@ MAX_LED_LENGTH = 15
 def stripe(red=0,green=0,blue=0):
     for x in range(0, MAX_LED_LENGTH):
         pixels[x] = (red, green, blue)
-        time.sleep(0.1)
+        time.sleep(0.2)
 
 def lightUp(red=0,green=0,blue=0):
     pixels.fill((red, green, blue))
