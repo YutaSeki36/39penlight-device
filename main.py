@@ -4,6 +4,7 @@ import time
 import os
 import subprocess
 import paho.mqtt.client as mqtt
+import asyncio
 import config
 
 HOSTNAME = "mqtt.beebotte.com"
@@ -13,9 +14,18 @@ TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 15
 
-def stripe(red=0,green=0,blue=0):
+flush_color_red = ""
+flush_color_green = ""
+flush_color_blue = ""
+
+# def stripe(red=0,green=0,blue=0):
+#     for x in range(0, MAX_LED_LENGTH):
+#         pixels[x] = (red, green, blue)
+#         time.sleep(0.2)
+
+async def asyncStripe():
     for x in range(0, MAX_LED_LENGTH):
-        pixels[x] = (red, green, blue)
+        pixels[x] = (flush_color_red, flush_color_green, flush_color_blue)
         time.sleep(0.2)
 
 def lightUp(red=0,green=0,blue=0):
@@ -36,9 +46,14 @@ def on_connect(client, userdata, flags, respons_code):
 def on_message(client, userdata, msg):
     print(msg.payload.decode('utf-8'))
     rgb = hex_to_rgb(msg.payload.decode('utf-8'))
-    stripe(rgb[0], rgb[1], rgb[2])
+    flush_color_red = rgb[0]
+    flush_color_green = rgb[1]
+    flush_color_blue = rgb[2]
+    # stripe(rgb[0], rgb[1], rgb[2])
 
 def main():
+    asyncStripe()
+
     try:
         client = mqtt.Client()
         client.username_pw_set("token:%s"%TOKEN)
