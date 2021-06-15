@@ -4,7 +4,7 @@ import time
 import os
 import subprocess
 import paho.mqtt.client as mqtt
-import asyncio
+import threading
 import config
 
 HOSTNAME = "mqtt.beebotte.com"
@@ -23,7 +23,7 @@ flush_color_blue = ""
 #         pixels[x] = (red, green, blue)
 #         time.sleep(0.2)
 
-async def asyncStripe():
+def asyncStripe():
     for x in range(0, MAX_LED_LENGTH):
         pixels[x] = (flush_color_red, flush_color_green, flush_color_blue)
         time.sleep(0.2)
@@ -52,7 +52,8 @@ def on_message(client, userdata, msg):
     # stripe(rgb[0], rgb[1], rgb[2])
 
 def main():
-    asyncStripe()
+    th = threading.Thread(target=asyncStripe)
+    th.start()
 
     try:
         client = mqtt.Client()
