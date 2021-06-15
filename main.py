@@ -23,13 +23,30 @@ flush_color_blue = 0
 #         pixels[x] = (red, green, blue)
 #         time.sleep(0.2)
 
-def asyncStripe():
-    global flush_color_red
-    global flush_color_green
-    global flush_color_blue
-    for x in range(0, MAX_LED_LENGTH):
-        pixels[x] = (flush_color_red, flush_color_green, flush_color_blue)
-        time.sleep(0.2)
+class ThreadJob(threading.Thread):
+    def __init__(self, flush_color_red=0, flush_color_green=0, flush_color_blue=0):
+        threading.Thread.__init__(self)
+        self.flush_color_red = flush_color_red
+        self.flush_color_green = flush_color_green
+        self.flush_color_blue = flush_color_blue
+        self.kill_flag = False
+
+    def run(self):
+        old = ""
+        print(self.kill_flag)
+        while not(self.kill_flag):
+             for x in range(0, MAX_LED_LENGTH):
+                pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                time.sleep(0.2)
+        print(self.kill_flag)
+
+# def asyncStripe():
+#     global flush_color_red
+#     global flush_color_green
+#     global flush_color_blue
+#     for x in range(0, MAX_LED_LENGTH):
+#         pixels[x] = (flush_color_red, flush_color_green, flush_color_blue)
+#         time.sleep(0.2)
 
 def lightUp(red=0,green=0,blue=0):
     pixels.fill((red, green, blue))
@@ -49,19 +66,17 @@ def on_connect(client, userdata, flags, respons_code):
 def on_message(client, userdata, msg):
     print(msg.payload.decode('utf-8'))
     rgb = hex_to_rgb(msg.payload.decode('utf-8'))
-    global flush_color_red
-    global flush_color_green
-    global flush_color_blue
-    lock.acquire()
-    flush_color_red = rgb[0]
-    flush_color_green = rgb[1]
-    flush_color_blue = rgb[2]
-    lock.release()
+    t.flush_color_red = rgb[0]
+    t.flush_color_green = rgb[1]
+    t.flush_color_blue = rgb[2]
     # stripe(rgb[0], rgb[1], rgb[2])
 
 def main():
-    th = threading.Thread(target=asyncStripe)
-    th.start()
+    # th = threading.Thread(target=asyncStripe)
+    # th.start()
+
+    t = ThreadJob()
+    t.start()
 
     try:
         client = mqtt.Client()
@@ -74,6 +89,7 @@ def main():
         # client.loop_forever()
 
     finally:
+        t.kill_flag = True
         cleanup()
 
 if __name__ == "__main__":
