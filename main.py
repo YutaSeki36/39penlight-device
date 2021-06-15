@@ -64,7 +64,9 @@ def main():
         client.on_connect = on_connect
         client.on_message = on_message
         client.connect(HOSTNAME, port=PORT, keepalive=60)
-        client.loop_forever()
+        th2 = threading.Thread(target=client.loop_forever)
+        th2.start()
+        # client.loop_forever()
 
     finally:
         cleanup()
