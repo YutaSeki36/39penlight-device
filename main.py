@@ -14,12 +14,6 @@ TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 15
 
-
-# def stripe(red=0,green=0,blue=0):
-#     for x in range(0, MAX_LED_LENGTH):
-#         pixels[x] = (red, green, blue)
-#         time.sleep(0.2)
-
 class ThreadJob(threading.Thread):
     def __init__(self, flush_color_red=0, flush_color_green=0, flush_color_blue=0):
         threading.Thread.__init__(self)
@@ -35,18 +29,10 @@ class ThreadJob(threading.Thread):
             if not(self.lightUpComp):
                 for x in range(0, MAX_LED_LENGTH):
                     pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
-                    time.sleep(0.2)
+                    time.sleep(0.1)
         print(self.kill_flag)
-        time.sleep(1)
+        time.sleep(0.5)
         cleanup()
-
-# def asyncStripe():
-#     global flush_color_red
-#     global flush_color_green
-#     global flush_color_blue
-#     for x in range(0, MAX_LED_LENGTH):
-#         pixels[x] = (flush_color_red, flush_color_green, flush_color_blue)
-#         time.sleep(0.2)
 
 def lightUp(red=0,green=0,blue=0):
     pixels.fill((red, green, blue))
@@ -69,11 +55,8 @@ def on_message(client, userdata, msg):
     t.flush_color_red = rgb[0]
     t.flush_color_green = rgb[1]
     t.flush_color_blue = rgb[2]
-    # stripe(rgb[0], rgb[1], rgb[2])
 
 def main():
-    # th = threading.Thread(target=asyncStripe)
-    # th.start()
 
     try:
         client = mqtt.Client()
