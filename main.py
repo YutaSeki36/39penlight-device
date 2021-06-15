@@ -24,6 +24,9 @@ flush_color_blue = 0
 #         time.sleep(0.2)
 
 def asyncStripe():
+    global flush_color_red
+    global flush_color_green
+    global flush_color_blue
     for x in range(0, MAX_LED_LENGTH):
         pixels[x] = (flush_color_red, flush_color_green, flush_color_blue)
         time.sleep(0.2)
