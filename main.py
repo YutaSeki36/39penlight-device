@@ -14,9 +14,9 @@ TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 15
 
-flush_color_red = ""
-flush_color_green = ""
-flush_color_blue = ""
+flush_color_red = 0
+flush_color_green = 0
+flush_color_blue = 0
 
 # def stripe(red=0,green=0,blue=0):
 #     for x in range(0, MAX_LED_LENGTH):
