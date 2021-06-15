@@ -75,18 +75,13 @@ def main():
     # th = threading.Thread(target=asyncStripe)
     # th.start()
 
-    t = ThreadJob()
-    t.start()
-
     try:
         client = mqtt.Client()
         client.username_pw_set("token:%s"%TOKEN)
         client.on_connect = on_connect
         client.on_message = on_message
         client.connect(HOSTNAME, port=PORT, keepalive=60)
-        th2 = threading.Thread(target=client.loop_forever)
-        th2.start()
-        # client.loop_forever()
+        client.loop_forever()
 
     finally:
         t.kill_flag = True
@@ -94,5 +89,6 @@ def main():
 
 if __name__ == "__main__":
     pixels = neopixel.NeoPixel(board.D18, 30)
-    lock = threading.Lock() 
+    t = ThreadJob()
+    t.start()
     main()
