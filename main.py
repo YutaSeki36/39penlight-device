@@ -52,9 +52,11 @@ def on_message(client, userdata, msg):
     global flush_color_red
     global flush_color_green
     global flush_color_blue
+    lock.acquire()
     flush_color_red = rgb[0]
     flush_color_green = rgb[1]
     flush_color_blue = rgb[2]
+    lock.release()
     # stripe(rgb[0], rgb[1], rgb[2])
 
 def main():
@@ -76,4 +78,5 @@ def main():
 
 if __name__ == "__main__":
     pixels = neopixel.NeoPixel(board.D18, 30)
+    lock = threading.Lock() 
     main()
