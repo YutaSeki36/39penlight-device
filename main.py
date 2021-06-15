@@ -46,6 +46,9 @@ def on_connect(client, userdata, flags, respons_code):
 def on_message(client, userdata, msg):
     print(msg.payload.decode('utf-8'))
     rgb = hex_to_rgb(msg.payload.decode('utf-8'))
+    global flush_color_red
+    global flush_color_green
+    global flush_color_blue
     flush_color_red = rgb[0]
     flush_color_green = rgb[1]
     flush_color_blue = rgb[2]
