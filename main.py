@@ -14,9 +14,6 @@ TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 15
 
-flush_color_red = 0
-flush_color_green = 0
-flush_color_blue = 0
 
 # def stripe(red=0,green=0,blue=0):
 #     for x in range(0, MAX_LED_LENGTH):
@@ -30,15 +27,18 @@ class ThreadJob(threading.Thread):
         self.flush_color_green = flush_color_green
         self.flush_color_blue = flush_color_blue
         self.kill_flag = False
+        self.lightUpComp = False
 
     def run(self):
-        old = ""
         print(self.kill_flag)
         while not(self.kill_flag):
-             for x in range(0, MAX_LED_LENGTH):
-                pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
-                time.sleep(0.2)
+            if not(self.lightUpComp):
+                for x in range(0, MAX_LED_LENGTH):
+                    pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                    time.sleep(0.2)
         print(self.kill_flag)
+        time.sleep(1)
+        cleanup()
 
 # def asyncStripe():
 #     global flush_color_red
@@ -85,7 +85,6 @@ def main():
 
     finally:
         t.kill_flag = True
-        cleanup()
 
 if __name__ == "__main__":
     pixels = neopixel.NeoPixel(board.D18, 30)
