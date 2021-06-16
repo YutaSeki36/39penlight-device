@@ -6,7 +6,7 @@ import subprocess
 import paho.mqtt.client as mqtt
 import threading
 import config
-from enum import Enum
+from enum import IntEnum
 
 HOSTNAME = "mqtt.beebotte.com"
 PORT = 1883
@@ -15,7 +15,7 @@ TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 15
 
-class FlushTypeEnum(Enum):
+class FlushTypeEnum(IntEnum):
     NORMAL = 1
     WAVE = 2
 
@@ -33,6 +33,7 @@ class ThreadJob(threading.Thread):
         print(self.kill_flag)
         while not(self.kill_flag):
             self.lightUpComp = False
+            pixels.fill((0, 0, 0))
             if self.flush_type == FlushTypeEnum.NORMAL: 
                     for x in range(0, MAX_LED_LENGTH):
                         pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
@@ -73,11 +74,13 @@ def on_connect(client, userdata, flags, respons_code):
 
 def on_message(client, userdata, msg):
     print(msg.payload.decode('utf-8'))
-    rgb = hex_to_rgb(msg.payload.decode('utf-8'))
+    payload = msg.payload.decode('utf-8').split(',')
+    rgb = hex_to_rgb(payload[0])
     t.flush_color_red = rgb[0]
     t.flush_color_green = rgb[1]
     t.flush_color_blue = rgb[2]
-    if t.flush_type == FlushTypeEnum.NORMAL:
+    ft = int(payload[1])
+    if ft == FlushTypeEnum.NORMAL:
         t.flush_type = FlushTypeEnum.WAVE
     else:
         t.lightUpComp = True
