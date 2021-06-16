@@ -13,10 +13,44 @@ TOPIC = "penlight/color"
 
 MAX_LED_LENGTH = 15
 
-def stripe(red=0,green=0,blue=0):
-    for x in range(0, MAX_LED_LENGTH):
-        pixels[x] = (red, green, blue)
-        time.sleep(0.2)
+class FlushTypeEnum(Enum):
+    NORMAL = 1
+    WAVE = 2
+
+class ThreadJob(threading.Thread):
+    def __init__(self, flush_color_red=0, flush_color_green=0, flush_color_blue=0):
+        threading.Thread.__init__(self)
+        self.flush_color_red = flush_color_red
+        self.flush_color_green = flush_color_green
+        self.flush_color_blue = flush_color_blue
+        self.kill_flag = False
+        self.lightup_comp = False
+        self.flush_type = FlushTypeEnum.NORMAL
+
+    def run(self):
+        print(self.kill_flag)
+        while not(self.kill_flag):
+            self.lightUpComp = True
+            if self.flush_type == FlushTypeEnum.NORMAL: 
+                    for x in range(0, MAX_LED_LENGTH):
+                        pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                        time.sleep(0.1)
+            else:
+                pos = 0
+                while not(self.kill_flag):
+                    if self.lightUpComp:
+                        break
+                    pixels[pos] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                    if pos == MAX_LED_LENGTH:
+                        pixels[0] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                    else:
+                        pixels[pos+1] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                    time.sleep(0.05)
+                    pos+=1
+
+        print(self.kill_flag)
+        time.sleep(0.5)
+        cleanup()
 
 def lightUp(red=0,green=0,blue=0):
     pixels.fill((red, green, blue))
@@ -36,7 +70,14 @@ def on_connect(client, userdata, flags, respons_code):
 def on_message(client, userdata, msg):
     print(msg.payload.decode('utf-8'))
     rgb = hex_to_rgb(msg.payload.decode('utf-8'))
-    stripe(rgb[0], rgb[1], rgb[2])
+    t.flush_color_red = rgb[0]
+    t.flush_color_green = rgb[1]
+    t.flush_color_blue = rgb[2]
+    if t.flush_type == FlushTypeEnum.NORMAL:
+        t.flush_type = FlushTypeEnum.WAVE
+    else:
+        t.lightUpComp = True
+        t.flush_type = FlushTypeEnum.NORMAL
 
 def main():
     try:
