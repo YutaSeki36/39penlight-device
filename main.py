@@ -4,7 +4,9 @@ import time
 import os
 import subprocess
 import paho.mqtt.client as mqtt
+import threading
 import config
+from enum import Enum
 
 HOSTNAME = "mqtt.beebotte.com"
 PORT = 1883
@@ -93,4 +95,6 @@ def main():
 
 if __name__ == "__main__":
     pixels = neopixel.NeoPixel(board.D18, 30)
+    t = ThreadJob()
+    t.start()
     main()
