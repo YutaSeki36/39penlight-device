@@ -32,7 +32,7 @@ class ThreadJob(threading.Thread):
     def run(self):
         print(self.kill_flag)
         while not(self.kill_flag):
-            self.lightUpComp = True
+            self.lightUpComp = False
             if self.flush_type == FlushTypeEnum.NORMAL: 
                     for x in range(0, MAX_LED_LENGTH):
                         pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
@@ -42,6 +42,7 @@ class ThreadJob(threading.Thread):
                 while not(self.kill_flag):
                     if self.lightUpComp:
                         break
+                    pixels.fill((0, 0, 0))
                     pixels[pos] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
                     if pos == MAX_LED_LENGTH:
                         pixels[0] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
