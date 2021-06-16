@@ -38,6 +38,9 @@ class ThreadJob(threading.Thread):
                     for x in range(0, MAX_LED_LENGTH):
                         pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
                         time.sleep(0.1)
+                    while not(self.kill_flag):
+                        if self.lightUpComp:
+                            break
             else:
                 pos = 0
                 while not(self.kill_flag):
@@ -81,6 +84,7 @@ def on_message(client, userdata, msg):
     t.flush_color_blue = rgb[2]
     ft = int(payload[1])
     if ft == FlushTypeEnum.NORMAL:
+        t.lightUpComp = True
         t.flush_type = FlushTypeEnum.WAVE
     else:
         t.lightUpComp = True
