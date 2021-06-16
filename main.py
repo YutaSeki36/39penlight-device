@@ -46,6 +46,7 @@ class ThreadJob(threading.Thread):
                     pixels[pos] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
                     if pos == MAX_LED_LENGTH:
                         pixels[0] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                        pos = 0
                     else:
                         pixels[pos+1] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
                     time.sleep(0.05)
