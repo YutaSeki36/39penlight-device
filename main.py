@@ -85,10 +85,10 @@ def on_message(client, userdata, msg):
     ft = int(payload[1])
     if ft == FlushTypeEnum.NORMAL:
         t.lightUpComp = True
-        t.flush_type = FlushTypeEnum.WAVE
+        t.flush_type = FlushTypeEnum.NORMAL
     else:
         t.lightUpComp = True
-        t.flush_type = FlushTypeEnum.NORMAL
+        t.flush_type = FlushTypeEnum.WAVE
 
 def main():
     try:
