@@ -83,11 +83,10 @@ def on_message(client, userdata, msg):
     t.flush_color_green = rgb[1]
     t.flush_color_blue = rgb[2]
     ft = int(payload[1])
+    t.lightUpComp = True
     if ft == FlushTypeEnum.NORMAL:
-        t.lightUpComp = True
         t.flush_type = FlushTypeEnum.NORMAL
-    else:
-        t.lightUpComp = True
+    elif ft == FlushTypeEnum.WAVE:
         t.flush_type = FlushTypeEnum.WAVE
 
 def main():
