@@ -18,6 +18,7 @@ MAX_LED_LENGTH = 15
 class FlushTypeEnum(IntEnum):
     NORMAL = 1
     WAVE = 2
+    BOUND = 3
 
 class ThreadJob(threading.Thread):
     def __init__(self, flush_color_red=0, flush_color_green=0, flush_color_blue=0):
@@ -37,11 +38,11 @@ class ThreadJob(threading.Thread):
             if self.flush_type == FlushTypeEnum.NORMAL: 
                     for x in range(0, MAX_LED_LENGTH):
                         pixels[x] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
-                        time.sleep(0.1)
+                        time.sleep(0.05)
                     while not(self.kill_flag):
                         if self.lightUpComp:
                             break
-            else:
+            elif self.flush_type == FlushTypeEnum.WAVE:
                 pos = 0
                 while not(self.kill_flag):
                     if self.lightUpComp:
@@ -55,6 +56,23 @@ class ThreadJob(threading.Thread):
                         pixels[pos+1] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
                     time.sleep(0.05)
                     pos+=1
+            elif self.flush_type == FlushTypeEnum.BOUND:
+                pos = 0
+                up = True
+                while not(self.kill_flag):
+                    if self.lightUpComp:
+                        break
+                    pixels.fill((0, 0, 0))
+                    pixels[pos] = (self.flush_color_red, self.flush_color_green, self.flush_color_blue)
+                    if pos == MAX_LED_LENGTH:
+                        up = False
+                    if pos == 0 and up == False:
+                        up = True
+                    if up:
+                        pos+=1
+                    else:
+                        pos-=1
+                    time.sleep(0.05)
 
         print(self.kill_flag)
         time.sleep(0.5)
@@ -88,6 +106,8 @@ def on_message(client, userdata, msg):
         t.flush_type = FlushTypeEnum.NORMAL
     elif ft == FlushTypeEnum.WAVE:
         t.flush_type = FlushTypeEnum.WAVE
+    elif ft == FlushTypeEnum.BOUND:
+        t.flush_type = FlushTypeEnum.BOUND
 
 def main():
     try:
