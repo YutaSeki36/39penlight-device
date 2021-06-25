@@ -89,6 +89,11 @@ def hex_to_rgb(hex):
     hlen = len(hex)
     return tuple(int(hex[i:i + hlen // 3], 16) for i in range(0, hlen, hlen // 3))
 
+def bpm_to_interval(bpm):
+    ceil_digit = 2
+    interval = bpm / 60
+    return math.floor(interval * 10 ** ceil_digit) / (10 ** ceil_digit)
+
 def on_connect(client, userdata, flags, respons_code):
     print('status {}'.format(respons_code))
     client.subscribe(TOPIC)
